@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><title>Maths 6ème – Révisions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f4ff;--card:#fff;--tx:#241f3a;--mu:#6b6785;--ac:#6c4cf1;--ok:#17a673;--ko:#e5484d;--bd:#e3def7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171528;--card:#221f3b;--tx:#efeefb;--mu:#a8a4c8;--ac:#9a82ff;--ok:#3ecf9a;--ko:#ff7a7f;--bd:#383461}}
+:root[data-theme="dark"]{--bg:#171528;--card:#221f3b;--tx:#efeefb;--mu:#a8a4c8;--ac:#9a82ff;--ok:#3ecf9a;--ko:#ff7a7f;--bd:#383461}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;margin:4px 0}h2{font-size:21px;margin:0 0 8px}
+.sub{color:var(--mu);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.th{cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.th:hover{border-color:var(--ac)}
+.th .e{font-size:30px}.th b{display:block;margin-top:4px}.th small{color:var(--mu)}
+.stars{letter-spacing:2px;color:#f5b301;margin-top:6px}
+button.p{background:var(--ac);color:#fff;border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:600;cursor:pointer}
+button.g{background:none;border:0;color:var(--ac);font:inherit;cursor:pointer;padding:6px 0}
+.bar{height:8px;background:var(--bd);border-radius:8px;margin:10px 0 16px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac)}
+.q{font-size:20px;font-weight:600;margin:6px 0 14px}
+input{font:inherit;font-size:20px;padding:10px 12px;border:2px solid var(--bd);border-radius:12px;width:150px;background:var(--bg);color:var(--tx)}
+.ch{display:block;width:100%;text-align:left;margin:8px 0;padding:12px;border:2px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit;cursor:pointer}
+.ch.ok{border-color:var(--ok)}.ch.ko{border-color:var(--ko)}
+.fb{margin-top:14px;padding:12px;border-radius:12px;font-size:16px}
+.fb.ok{background:color-mix(in srgb,var(--ok) 15%,transparent)}.fb.ko{background:color-mix(in srgb,var(--ko) 15%,transparent)}
+details{margin-bottom:14px}summary{cursor:pointer;font-weight:600;color:var(--ac)}
+.row{display:flex;align-items:center;gap:10px;margin:8px 0}.row label{flex:1}.row input{width:120px}
+.big{font-size:48px;text-align:center}.c{text-align:center}
+</style></head><body><main id="app"></main>
+<script>
+const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a,f=n=>String(n).replace('.',','),pick=a=>a[R(0,a.length-1)];
+const sh=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const sp=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+const QC=(q,c,a,e)=>()=>({q,c:sh(c),a,e});
+const T=[
+{id:'calc',n:'Calcul',e:'🧮',d:'Opérations et division euclidienne',
+c:'<b>Division euclidienne</b> : dividende = diviseur × quotient + reste, avec reste &lt; diviseur.<br>Pour multiplier, décompose : 47 × 6 = 40×6 + 7×6 = 240 + 42.',
+g:[()=>{const a=R(120,9800),b=R(120,9800);return{q:`${a} + ${b} = ?`,a:a+b,e:`${a} + ${b} = ${a+b}`}},
+()=>{const b=R(120,4000),a=b+R(100,5000);return{q:`${a} − ${b} = ?`,a:a-b,e:`${a} − ${b} = ${a-b}`}},
+()=>{let a=R(12,99);while(a%10==0)a=R(12,99);const b=R(3,9),d=a-a%10,u=a%10;return{q:`${a} × ${b} = ? Décompose ${a} en ${d} + ${u}.`,s:[{l:`${d} × ${b} =`,a:d*b},{l:`${u} × ${b} =`,a:u*b}],a:a*b,e:`${a} × ${b} = ${d}×${b} + ${u}×${b} = ${d*b} + ${u*b} = ${a*b}`}},
+()=>{const b=R(3,12),q=R(10,60),r=R(1,b-1),a=b*q+r;return{q:`Division euclidienne de ${a} par ${b} : donne le reste, puis le quotient.`,s:[{l:'Reste =',a:r}],a:q,e:`${a} = ${b} × ${q} + ${r}. Quotient ${q}, reste ${r}.`}}]},
+{id:'dec',n:'Nombres décimaux',e:'🔢',d:'Arrondir, × 10, 100, 1000, additions',
+c:'<b>× 10, 100, 1000</b> : la virgule se décale de 1, 2, 3 rangs vers la droite.<br><b>Arrondir au dixième</b> : regarde le chiffre des centièmes. 5 ou plus → on augmente.',
+g:[()=>{const k=pick([10,100,1000]),m=R(11,999);return{q:`${f(m/100)} × ${k} = ?`,a:m*k/100,e:`On décale la virgule de ${String(k).length-1} rang(s) : ${f(m*k/100)}`}},
+()=>{const m=R(1000,9999);return{q:`Arrondis ${f(m/1000)} au dixième.`,a:Math.round(m/100)/10,e:`On regarde les centièmes. Résultat : ${f(Math.round(m/100)/10)}`}},
+()=>{const A=R(11,999),B=R(11,999);return{q:`${f(A/10)} + ${f(B/10)} = ?`,a:(A+B)/10,e:`On aligne les virgules : ${f((A+B)/10)}`}}]},
+{id:'frac',n:'Fractions',e:'🍕',d:'Fraction d\'une quantité, équivalences',
+c:'<b>Fraction d\'une quantité</b> : pour ¾ de 20, on divise par 4 (5) puis on multiplie par 3 (15).<br><b>Fractions égales</b> : on multiplie le haut et le bas par le même nombre.',
+g:[()=>{const d=pick([2,3,4,5,6,8,10]),n=R(1,d-1),Q=d*R(2,12);return{q:`Calcule ${n}/${d} de ${Q}.`,s:[{l:`${Q} ÷ ${d} =`,a:Q/d}],a:n*Q/d,e:`${Q} ÷ ${d} = ${Q/d}, puis × ${n} = ${n*Q/d}`}},
+()=>{const d=R(5,12),a=R(1,5),b=R(1,5);return{q:`${a}/${d} + ${b}/${d} = ?/${d}  (numérateur)`,a:a+b,e:`Même dénominateur : ${a} + ${b} = ${a+b}`}},
+()=>{const b=R(2,9),a=R(1,b-1),k=R(2,6);return{q:`${a}/${b} = ?/${b*k}`,a:a*k,e:`${b} × ${k} = ${b*k}, donc ${a} × ${k} = ${a*k}`}}]},
+{id:'mes',n:'Grandeurs et mesures',e:'📏',d:'Périmètre, aire, unités, durées',
+c:'<b>Périmètre du rectangle</b> = 2 × (L + l). <b>Aire</b> = L × l. <b>Aire du carré</b> = c × c.<br>1 m = 100 cm · 1 km = 1 000 m · 1 kg = 1 000 g · 1 h = 60 min.',
+g:[()=>{const L=R(5,20),l=R(2,L-1);return{q:`Périmètre d'un rectangle de ${L} cm sur ${l} cm (en cm) ?`,s:[{l:`${L} + ${l} =`,a:L+l}],a:2*(L+l),e:`2 × (${L} + ${l}) = ${2*(L+l)}`}},
+()=>{const L=R(5,20),l=R(2,L-1);return{q:`Aire d'un rectangle de ${L} cm sur ${l} cm (en cm²) ?`,a:L*l,e:`${L} × ${l} = ${L*l}`}},
+()=>{const c=R(3,15);return{q:`Aire d'un carré de ${c} cm de côté (en cm²) ?`,a:c*c,e:`${c} × ${c} = ${c*c}`}},
+()=>{const x=R(2,95),[u,v,k]=pick([['m','cm',100],['km','m',1000],['kg','g',1000]]);return{q:`${x} ${u} = ? ${v}`,a:x*k,e:`1 ${u} = ${k} ${v}, donc ${x} × ${k} = ${x*k}`}},
+()=>{const h=R(1,4),m=R(5,55);return{q:`${h} h ${m} min = ? minutes`,s:[{l:`${h} × 60 =`,a:h*60}],a:h*60+m,e:`${h} × 60 + ${m} = ${h*60+m}`}}]},
+{id:'prop',n:'Proportionnalité',e:'⚖️',d:'Prix, recettes, vitesse',
+c:'Deux grandeurs sont <b>proportionnelles</b> si on passe de l\'une à l\'autre en multipliant par le même nombre. Astuce : cherche d\'abord la valeur pour <b>1</b> (le prix d\'un kilo, par exemple).',
+g:[()=>{const u=R(2,9),n=R(2,5),m=n+R(2,6);return{q:`${n} kg de pommes coûtent ${n*u} €. Combien coûtent ${m} kg (en €) ?`,s:[{l:'Prix de 1 kg (en €) =',a:u}],a:m*u,e:`1 kg coûte ${u} €, donc ${m} kg coûtent ${m*u} €`}},
+()=>{const x=R(5,25)*10,k=R(2,4);return{q:`Pour 4 personnes, il faut ${x} g de farine. Combien pour ${4*k} personnes (en g) ?`,s:[{l:`Multiplicateur (${4*k} ÷ 4) =`,a:k}],a:x*k,e:`${4*k} = 4 × ${k}, donc ${x} × ${k} = ${x*k}`}},
+()=>{const v=R(4,9)*5,h=R(2,5);return{q:`Un cycliste roule à ${v} km par heure. Quelle distance en ${h} h (en km) ?`,a:v*h,e:`${v} × ${h} = ${v*h}`}}]},
+{id:'geo',n:'Géométrie',e:'📐',d:'Angles, triangles, cercle',
+c:'Angle <b>aigu</b> &lt; 90° · <b>droit</b> = 90° · <b>obtus</b> entre 90° et 180° · <b>plat</b> = 180°.<br>Triangle <b>isocèle</b> : 2 côtés égaux · <b>équilatéral</b> : 3 côtés égaux. Diamètre = 2 × rayon.',
+g:[QC('Un angle de 90° est un angle…',['aigu','droit','obtus','plat'],'droit','90° = angle droit.'),
+QC('Un angle de 135° est un angle…',['aigu','droit','obtus','plat'],'obtus','Entre 90° et 180° : obtus.'),
+QC('Un triangle qui a ses 3 côtés égaux est…',['isocèle','équilatéral','rectangle','quelconque'],'équilatéral','3 côtés égaux : équilatéral.'),
+QC('Un triangle qui a exactement 2 côtés égaux est…',['isocèle','équilatéral','rectangle','plat'],'isocèle','2 côtés égaux : isocèle.'),
+QC('Quel est le diamètre d\'un cercle de rayon 6 cm ?',['3 cm','6 cm','12 cm','36 cm'],'12 cm','Diamètre = 2 × rayon = 12 cm.'),
+QC('Un quadrilatère avec 4 angles droits et 4 côtés égaux est…',['un rectangle','un losange','un carré','un trapèze'],'un carré','4 angles droits + 4 côtés égaux : carré.'),
+QC('Le symétrique d\'un point situé sur l\'axe de symétrie est…',['lui-même','impossible à trouver','à l\'infini','sur l\'axe, plus loin'],'lui-même','Un point de l\'axe est son propre symétrique.'),
+QC('Deux droites perpendiculaires forment un angle de…',['45°','90°','180°','360°'],'90°','Perpendiculaires = angle droit.')]},
+{id:'ent',n:'Grands nombres',e:'🔟',d:'Chiffres, multiples, divisibilité',
+c:'Rangs : unités, dizaines, centaines, milliers… <br><b>Divisible par</b> 2 : dernier chiffre pair · 5 : finit par 0 ou 5 · 10 : finit par 0 · 3 ou 9 : la somme des chiffres est un multiple de 3 ou de 9.',
+g:[()=>{const n=R(10000,999999),[nm,p]=pick([['des unités',0],['des dizaines',1],['des centaines',2],['des milliers',3]]),d=Math.floor(n/10**p)%10;return{q:`Dans ${sp(n)}, quel est le chiffre ${nm} ?`,a:d,e:`Le chiffre ${nm} est ${d}.`}},
+()=>{const k=R(6,9),n=R(20,200),m=(Math.floor(n/k)+1)*k;return{q:`Quel est le plus petit multiple de ${k} supérieur à ${n} ?`,a:m,e:`${k} × ${Math.floor(n/k)+1} = ${m}`}},
+()=>{const n=R(100,9999);return{q:`Combien y a-t-il de dizaines (au total) dans ${sp(n)} ?`,a:Math.floor(n/10),e:`On garde la partie entière de ${sp(n)} ÷ 10 : ${Math.floor(n/10)}`}},
+()=>{const k=pick([3,9]),g=k*R(12,99),b=new Set();while(b.size<3){const x=R(100,999);if(x%k)b.add(x)}return{q:`Lequel de ces nombres est divisible par ${k} ?`,c:sh([g,...b].map(String)),a:String(g),e:`La somme des chiffres de ${g} est un multiple de ${k}.`}}]},
+{id:'pri',n:'Priorités de calcul',e:'🧩',d:'Parenthèses, × avant +',
+c:'On calcule d\'abord <b>dans les parenthèses</b>, puis les <b>multiplications et divisions</b>, et enfin les additions et soustractions (de gauche à droite).',
+g:[()=>{const a=R(2,20),b=R(2,9),c=R(2,9);return{q:`${a} + ${b} × ${c} = ?`,s:[{l:`${b} × ${c} =`,a:b*c}],a:a+b*c,e:`${a} + ${b*c} = ${a+b*c}`}},
+()=>{const a=R(2,20),b=R(2,20),c=R(2,9);return{q:`(${a} + ${b}) × ${c} = ?`,s:[{l:`${a} + ${b} =`,a:a+b}],a:(a+b)*c,e:`${a+b} × ${c} = ${(a+b)*c}`}},
+()=>{const a=R(3,9),b=R(3,9),c=R(1,a*b-1);return{q:`${a} × ${b} − ${c} = ?`,s:[{l:`${a} × ${b} =`,a:a*b}],a:a*b-c,e:`${a*b} − ${c} = ${a*b-c}`}}]},
+{id:'sym',n:'Symétrie axiale',e:'🦋',d:'Axes, symétrique d\'un point',
+c:'Deux figures sont <b>symétriques</b> par rapport à une droite (l\'axe) si on peut les superposer en pliant. La symétrie <b>conserve</b> les longueurs, les angles et les aires. L\'axe est la <b>médiatrice</b> de [AA\'].',
+g:[QC('Dans une symétrie axiale, la longueur d\'un segment est…',['conservée','doublée','divisée par 2','changée'],'conservée','La symétrie axiale conserve les longueurs.'),
+QC('Par rapport à [AA\'], l\'axe de symétrie est…',['la médiatrice','la médiane','la hauteur','un côté'],'la médiatrice','L\'axe est perpendiculaire à [AA\'] en son milieu : c\'est la médiatrice.'),
+QC('Combien d\'axes de symétrie a un carré ?',['1','2','4','8'],'4','2 médianes et 2 diagonales : 4 axes.'),
+QC('Combien d\'axes de symétrie a un rectangle non carré ?',['1','2','3','4'],'2','Les deux médianes.'),
+QC('Combien d\'axes de symétrie a un triangle équilatéral ?',['1','2','3','6'],'3','Un axe par sommet : 3.'),
+QC('Combien d\'axes de symétrie a un cercle ?',['1','2','4','une infinité'],'une infinité','Tout diamètre est un axe de symétrie.'),
+()=>{const n=R(2,12);return{q:`Un point A est à ${n} cm de l\'axe. Son symétrique A' est de l\'autre côté, à la même distance. Quelle est la longueur AA' (en cm) ?`,a:2*n,e:`${n} + ${n} = ${2*n}`}}]},
+{id:'ang',n:'Angles',e:'📐',d:'Complémentaire, supplémentaire, triangle',
+c:'Deux angles <b>complémentaires</b> font 90° ensemble. Deux angles <b>supplémentaires</b> font 180°. La somme des angles d\'un <b>triangle</b> est 180°. On mesure un angle avec un <b>rapporteur</b>.',
+g:[()=>{const x=R(10,80);return{q:`Un angle mesure ${x}°. Quelle est la mesure de son complémentaire (en °) ?`,a:90-x,e:`90 − ${x} = ${90-x}`}},
+()=>{const x=R(20,160);return{q:`Un angle mesure ${x}°. Quelle est la mesure de son supplémentaire (en °) ?`,a:180-x,e:`180 − ${x} = ${180-x}`}},
+()=>{const a=R(30,90),b=R(30,80);return{q:`Un triangle a deux angles de ${a}° et ${b}°. Combien mesure le troisième (en °) ?`,s:[{l:`${a} + ${b} =`,a:a+b}],a:180-a-b,e:`180 − ${a+b} = ${180-a-b}`}},
+QC('Quel instrument sert à mesurer un angle ?',['la règle','l\'équerre seule','le rapporteur','le compas'],'le rapporteur','Le rapporteur mesure les angles en degrés.')]},
+{id:'vol',n:'Volumes',e:'🧊',d:'Pavé droit, cube, contenances',
+c:'<b>Volume d\'un pavé droit</b> = longueur × largeur × hauteur. <b>Cube</b> : côté × côté × côté.<br>1 L = 1 dm³ = 100 cL = 1 000 mL.',
+g:[()=>{const L=R(2,9),l=R(2,6),h=R(2,6);return{q:`Volume d'un pavé de ${L} cm × ${l} cm × ${h} cm (en cm³) ?`,s:[{l:`${L} × ${l} =`,a:L*l}],a:L*l*h,e:`${L*l} × ${h} = ${L*l*h}`}},
+()=>{const c=R(2,9);return{q:`Volume d'un cube de ${c} cm de côté (en cm³) ?`,s:[{l:`${c} × ${c} =`,a:c*c}],a:c**3,e:`${c*c} × ${c} = ${c**3}`}},
+()=>{const x=R(2,20),[v,k]=pick([['cL',100],['mL',1000]]);return{q:`${x} L = ? ${v}`,a:x*k,e:`1 L = ${k} ${v}, donc ${x} × ${k} = ${x*k}`}},
+()=>{const L=R(2,6),l=R(2,5),h=R(2,5);return{q:`Un aquarium mesure ${L} dm × ${l} dm × ${h} dm. Quelle est sa contenance (en L) ?`,s:[{l:`${L} × ${l} =`,a:L*l}],a:L*l*h,e:`${L*l*h} dm³ = ${L*l*h} L`}}]},
+{id:'don',n:'Données et moyenne',e:'📊',d:'Moyenne, pourcentages, effectifs',
+c:'<b>Moyenne</b> = somme des valeurs ÷ nombre de valeurs.<br><b>Pourcentage</b> : 50 % = la moitié, 25 % = le quart, 10 % = divisé par 10.',
+g:[()=>{const a=R(6,18),b=R(6,18);let c=R(6,18);while((a+b+c)%3)c=R(6,18);return{q:`Trois notes : ${a}, ${b} et ${c}. Quelle est la moyenne ?`,s:[{l:`${a} + ${b} + ${c} =`,a:a+b+c}],a:(a+b+c)/3,e:`${a+b+c} ÷ 3 = ${(a+b+c)/3}`}},
+()=>{const p=pick([10,25,50]),q=({10:10,25:4,50:2})[p]*R(2,40);return{q:`Calcule ${p} % de ${q}.`,a:q*p/100,e:`${p} % de ${q} = ${q*p/100}`}},
+()=>{const a=R(3,12),b=R(3,12),c=R(3,12);return{q:`${a} élèves aiment le foot, ${b} le basket et ${c} la natation (un seul sport chacun). Combien d'élèves en tout ?`,s:[{l:`${a} + ${b} =`,a:a+b}],a:a+b+c,e:`${a+b} + ${c} = ${a+b+c}`}},
+()=>{const n=pick([10,20,25,50]),k=R(1,n-1);return{q:`Sur ${n} élèves, ${k} viennent à vélo. Quel pourcentage (en %) ?`,a:k*100/n,e:`${k} élèves sur ${n} : ${k} × ${100/n} = ${k*100/n} %`}}]}];
+
+let S={}, st=null;
+const load=()=>{try{S=JSON.parse(localStorage.getItem('maths6')||'{}')}catch(e){S={}}};
+const save=()=>{try{localStorage.setItem('maths6',JSON.stringify(S))}catch(e){}};
+const app=document.getElementById('app');
+const stars=n=>'★'.repeat(n)+'☆'.repeat(3-n);
+const starN=s=>s>=9?3:s>=7?2:s>=5?1:0;
+
+function home(){
+ st=null;
+ app.innerHTML=`<h1>Maths 6ème 🧮</h1><p class="sub">Choisis un thème, lis le rappel de cours, puis entraîne-toi : 10 questions à chaque fois !</p><div class="grid">`+
+ T.map(t=>`<button class="card th" data-id="${t.id}"><span class="e">${t.e}</span><b>${t.n}</b><small>${t.d}</small><div class="stars">${stars(starN(S[t.id]||0))}</div><small>${S[t.id]!=null?'Meilleur score : '+S[t.id]+'/10':'Pas encore essayé'}</small></button>`).join('')+`</div>`;
+ app.querySelectorAll('.th').forEach(b=>b.onclick=()=>start(b.dataset.id));
+}
+function start(id){
+ const t=T.find(x=>x.id===id);
+ st={t,qs:Array.from({length:10},()=>pick(t.g)()),i:0,s:0,done:false};
+ show();
+}
+function show(){
+ const {t,qs,i}=st,q=qs[i];
+ let h=`<button class="g" id="back">← Thèmes</button><h2>${t.e} ${t.n}</h2><details ${i==0?'open':''}><summary>Rappel de cours</summary><div class="card" style="margin-top:8px">${t.c}</div></details>
+ <div class="bar"><i style="width:${i*10}%"></i></div><div class="card"><small>Question ${i+1} / 10</small><div class="q">${q.q}</div>`;
+ h+=q.c?q.c.map((c,k)=>`<button class="ch" data-k="${k}">${c}</button>`).join(''):q.s?`<p class="sub" style="margin:0">Détaille ta méthode, étape par étape :</p>`+[...q.s,{l:'<b>Résultat final</b>'}].map(x=>`<div class="row"><label>${x.l}</label><input class="si" inputmode="decimal" autocomplete="off"></div>`).join('')+`<button class="p" id="ok">Valider</button>`:`<input id="in" inputmode="decimal" autocomplete="off" autofocus> <button class="p" id="ok">Valider</button>`;
+ h+=`<div id="fb"></div></div>`;
+ app.innerHTML=h;
+ document.getElementById('back').onclick=home;
+ if(q.c)app.querySelectorAll('.ch').forEach(b=>b.onclick=()=>answer(b.textContent,b));
+ else if(q.s){const ins=[...app.querySelectorAll('.si')];const go=()=>{if(ins.every(x=>x.value.trim()))answer()};document.getElementById('ok').onclick=go;ins.forEach((el,k)=>el.onkeydown=e=>{if(e.key==='Enter'){if(k<ins.length-1)ins[k+1].focus();else go()}});ins[0].focus()}
+ else{const inp=document.getElementById('in');document.getElementById('ok').onclick=()=>{if(inp.value.trim())answer(inp.value)};inp.onkeydown=e=>{if(e.key==='Enter'&&inp.value.trim())answer(inp.value)};inp.focus()}
+}
+function answer(v,btn){
+ if(st.done)return;st.done=true;
+ const q=st.qs[st.i];let good,det='';
+ if(q.c){good=v===q.a;app.querySelectorAll('.ch').forEach(b=>{if(b.textContent===q.a)b.classList.add('ok');else if(b===btn)b.classList.add('ko')})}
+ else if(q.s){const ins=[...app.querySelectorAll('.si')],all=[...q.s,{l:'Résultat final =',a:q.a}];const ok=all.map((x,k)=>Math.abs(parseFloat(ins[k].value.replace(',','.'))-x.a)<1e-9);good=ok.every(Boolean);ins.forEach((el,k)=>{el.disabled=true;el.style.borderColor=ok[k]?'var(--ok)':'var(--ko)'});document.getElementById('ok').style.display='none';det=all.map((x,k)=>`${ok[k]?'✅':'❌'} ${x.l} <b>${f(x.a)}</b>`).join('<br>')}
+ else{good=Math.abs(parseFloat(v.replace(',','.').replace(/\s/g,''))-q.a)<1e-9;const i=document.getElementById('in');i.disabled=true;document.getElementById('ok').style.display='none'}
+ if(good)st.s++;
+ const last=st.i==9;
+ document.getElementById('fb').innerHTML=`<div class="fb ${good?'ok':'ko'}"><b>${good?'✅ Bravo !':'❌ Pas tout à fait.'}</b> ${good||q.s?'':'Réponse : <b>'+f(q.a)+'</b>.'}<br>${det?det+'<br>':''}${q.e}</div><p><button class="p" id="nx">${last?'Voir mon score':'Suivant →'}</button></p>`;
+ const nx=document.getElementById('nx');nx.onclick=next;nx.focus();
+}
+function next(){
+ st.done=false;
+ if(st.i<9){st.i++;show();return}
+ const {t,s}=st;if(S[t.id]==null||s>S[t.id])S[t.id]=s;save();
+ const msg=s>=9?'Excellent, tu maîtrises ce thème !':s>=7?'Très bien, encore un petit effort !':s>=5?'C\'est bien parti, relis le cours et recommence.':'Pas de panique : relis le rappel de cours et réessaie.';
+ app.innerHTML=`<div class="card c"><div class="big">${['🌱','⭐','🌟','🏆'][starN(s)]}</div><h2>${s} / 10</h2><div class="stars">${stars(starN(s))}</div><p>${msg}</p><p><button class="p" id="re">Rejouer</button> <button class="g" id="hm">Retour aux thèmes</button></p></div>`;
+ document.getElementById('re').onclick=()=>start(t.id);document.getElementById('hm').onclick=home;
+}
+load();home();
+</script></body></html>
